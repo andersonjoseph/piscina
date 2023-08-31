@@ -816,6 +816,48 @@ documentation that threads are being used. It would be ideal if those
 would make it possible for users to provide an existing `Piscina` instance
 as a configuration option in lieu of always creating their own.
 
+## TypeScript Generic Parameters
+
+You can write the class declaration as `Piscina<T, R>`, where `T` is the type 
+of the task and `R` is the return type of the worker function. 
+
+For example, if you have a worker function that takes an object with two 
+numbers and returns their sum, you can write:
+
+```ts
+import { Piscina } from 'piscina';
+
+// Define the task type
+interface Task {
+  a: number;
+  b: number;
+}
+
+// Define the return type
+type Result = number;
+
+// Create a Piscina instance with generic parameters
+const piscina = new Piscina<Task, Result>({
+  filename: new URL('./worker.mjs', import.meta.url).href
+});
+
+// Run a task with type checking
+const result = await piscina.run({ a: 4, b: 6 });
+
+console.log(result); // Prints 10
+```
+
+In worker.ts:
+
+```ts
+// Export a worker function with generic parameters
+export default ({ a, b }: Task): Result => {
+  return a + b;
+};
+```
+
+Using generic parameters with Piscina can help you avoid type errors and make 
+your code more readable and maintainable.
 
 ## Release Notes
 
