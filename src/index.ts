@@ -915,7 +915,7 @@ class ThreadPool {
   }
 }
 
-class Piscina extends EventEmitterAsyncResource {
+class Piscina<T = any, R = any> extends EventEmitterAsyncResource {
   #pool : ThreadPool;
 
   constructor (options : Options = {}) {
@@ -1026,7 +1026,7 @@ class Piscina extends EventEmitterAsyncResource {
       });
   }
 
-  run (task : any, options : RunOptions = kDefaultRunOptions) {
+  run (task : T, options : RunOptions = kDefaultRunOptions): Promise<R> {
     if (options === null || typeof options !== 'object') {
       return Promise.reject(
         new TypeError('options must be an object'));
